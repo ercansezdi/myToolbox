@@ -5,7 +5,6 @@ import keyboard
 from tkinter import *
 from tkinter.messagebox import showinfo
 from PIL import Image, ImageTk
-import datetime
 import os
 import ctypes
 import pymongo
@@ -13,16 +12,15 @@ import tkinter.ttk
 import datetime
 from time import sleep
 import sqlite3
-from functools import partial
 import configparser
 from tkinter import messagebox
 
-class airrivalsGui(Frame):
+class airrivalsGui(tkinter.Frame):
     def __init__(self,parent):
         Frame.__init__(self,parent)
         self.parent = parent
-        self.parent.title("Airrivals ToolBox")
-        self.parent.geometry("600x1")
+        #self.parent.title("Airrivals ToolBox")
+        #self.parent.geometry("600x1")
         self.variables()
         self.InitGui()
 
@@ -205,11 +203,10 @@ class airrivalsGui(Frame):
 
 
 
-
     def run_otoBuf(self):
-        self.parent.title("Auto Buff")
+        #self.parent.title("Auto Buff")
         showinfo("Uyarı", "Oyuna Etki etmesi için\n Yönetici olarak çalıştırınız. !")
-        self.parent.geometry("300x70")
+        #self.parent.geometry("300x70")
         self.timer.grid_remove()
         self.upgrade.grid_remove()
         self.expCalc.grid_remove()
@@ -329,9 +326,9 @@ class airrivalsGui(Frame):
                 self.click_button()
                 self.click_button()
     def run_autoUpgrade(self):
-        self.parent.title("Auto Upgrade")
+        #self.parent.title("Auto Upgrade")
         showinfo("Uyarı", "Oyuna Etki etmesi için\n Yönetici olarak çalıştırınız. !")
-        self.parent.geometry("300x70")
+        #self.parent.geometry("300x70")
         self.timer.grid_remove()
         self.buf_discontunie.grid_remove()
         self.buff_contunie.grid_remove()
@@ -378,9 +375,9 @@ class airrivalsGui(Frame):
             self.click_button()
             self.click_button()
     def run_destroy(self):
-        self.parent.title("Item Destroy")
+        #self.parent.title("Item Destroy")
         showinfo("Uyarı", "Oyuna Etki etmesi için\n Yönetici olarak çalıştırınız. !")
-        self.parent.geometry("220x70")
+        #self.parent.geometry("220x70")
         self.iDestroy.grid(row=0, column=0)
         self.timer.grid_remove()
         self.buf_discontunie.grid_remove()
@@ -393,8 +390,8 @@ class airrivalsGui(Frame):
     def fark_ayarla(self):
         self.database.update_config(self.entry_3.get())
     def run_timer(self):
-        self.parent.title("Boss Timer")
-        self.parent.geometry("450x320")
+        #("Boss Timer")
+        #self.parent.geometry("450x320")
         self.timer.grid(row=0,column=0)
         self.upgrade.grid_remove()
         self.buf_discontunie.grid_remove()
@@ -509,8 +506,8 @@ class airrivalsGui(Frame):
             self.kul_time.set("{}:{}:{}".format(saat, dakika, saniye))
         root.after(1000, run.loop)
     def run_calcExp(self):
-        self.parent.title("Experiment Calculator")
-        self.parent.geometry("300x70")
+        #self.parent.title("Experiment Calculator")
+        #self.parent.geometry("300x70")
         self.iDestroy.grid_remove()
         self.timer.grid_remove()
         self.upgrade.grid_remove()
@@ -663,8 +660,8 @@ class airrivalsGui(Frame):
         except:
             pass
     def run_passworDirectory(self):
-        self.parent.title("Password Directory")
-        self.parent.geometry("645x270")
+        #self.parent.title("Password Directory")
+        #self.parent.geometry("645x270")
         self.timer.grid_remove()
         self.upgrade.grid_remove()
         self.buf_discontunie.grid_remove()

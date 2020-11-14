@@ -8,6 +8,7 @@ class Gui(Frame):
         self.parent.geometry("300x250")
         self.main_frame = Frame(self.parent)
         self.wifi_frame = Frame(self.parent)
+        self.airrivals_frame = Frame(self.parent)
 
 
         self.main_frame.grid(row=0,column=0)
@@ -22,7 +23,10 @@ class Gui(Frame):
         self.run_wifi_init()
 
     def run_airrivals(self):
-        print("airrivals")
+        self.remove_all_frame()
+        self.airrivals_frame.grid(row=0,column=0)
+        airrivals = airrivalsGui(self.airrivals_frame)
+
 
 
     def run_main(self):
@@ -39,8 +43,12 @@ class Gui(Frame):
         self.wifi_frame.grid(row=0, column=0)
         self.wifi_frame.config(bg="white")
         passwd = wifi_passwd.see_wifi_pass()
-        self.parent.geometry("390x" + str(50 + 15 * len(passwd[0])))
+        self.parent.geometry("390x" + str(50 + 15 * ( len(passwd[0]) + 1 ) ))
         self.parent.title("Wifi Scanner")
+        self.wifi_id_tree = FancyListbox(self.wifi_frame, font=("Helvatica bold", 12), justify=CENTER)
+        self.wifi_id_tree.grid(row=2, column=0, rowspan=4, columnspan=1, ipady=40)
+        self.wifi_passwd_tree = FancyListbox(self.wifi_frame, font=("Helvatica bold", 12), justify=CENTER)
+        self.wifi_passwd_tree.grid(row=2, column=1, rowspan=4, columnspan=2, ipadx=50, ipady=40)
         for i in range(0, len(passwd[0])):
             self.wifi_id_tree.insert('end', passwd[0][i])
             self.wifi_passwd_tree.insert('end', passwd[1][i])
@@ -53,10 +61,7 @@ class Gui(Frame):
         self.wifi_passwd_label = Label(self.wifi_frame, text="Wifi Password", font=("Helvatica bold", 12), bg="white",
                                        fg="red")
         self.wifi_passwd_label.grid(row=1, column=1)
-        self.wifi_id_tree = FancyListbox(self.wifi_frame, font=("Helvatica bold", 12), justify=CENTER)
-        self.wifi_id_tree.grid(row=2, column=0, rowspan=4, columnspan=1, ipady=40)
-        self.wifi_passwd_tree = FancyListbox(self.wifi_frame, font=("Helvatica bold", 12), justify=CENTER)
-        self.wifi_passwd_tree.grid(row=2, column=1, rowspan=4, columnspan=2, ipadx=50, ipady=40)
+
 
 
 if __name__ == "__main__":
