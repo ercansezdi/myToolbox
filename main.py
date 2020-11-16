@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
+#import download
+#download.download(["keyboard", "pillow", "pymongo", "pymongo[srv]"])
+
 import threading
 import keyboard
 from tkinter import *
@@ -20,7 +23,7 @@ class tkinterGui(Frame):
         Frame.__init__(self,parent)
         self.parent = parent
         self.parent.title("ToolBox")
-        self.parent.geometry("385x27")
+        self.parent.geometry("166x280")
         self.variables()
         self.InitGui()
 
@@ -174,10 +177,25 @@ class tkinterGui(Frame):
         self.relog_time_entry.insert(0,0)
         self.autobuf_continuous = Button(self.autoBuff,text = "Başlat",command= self.buf_control, font="Helvatica 12 bold")
         self.autobuf_continuous.grid(row=1,column=0,ipadx=100,ipady=5,padx=25,columnspan=2,pady=10)
+        # Main Screen
+
+        self.appName = ["Airrivals","Table Builder"]
+        self.appFrame = [self.air_main_frame, self.table_builder_frame]
+        self.appGeometry = ["385x30", "50x50"]
+        self.appNames = Listbox(self.mainFrame, font=("Helvatica bold", 12), justify=CENTER)
+        self.appNames.grid(row=0, column=0, rowspan=4, columnspan=1, ipady=40)
+        scrollbar = Scrollbar(self.mainFrame)
+        scrollbar.grid(row=0,column=1,ipady=100)
+        self.appNames.config(yscrollcommand = scrollbar.set)
+        scrollbar.config(command=self.appNames.yview)
+        for values in self.appName:
+            self.appNames.insert(END, values)
+        self.mainFrame_button = Button(self.mainFrame, text = "Open App",command = self.open_app, font = ("Helvatica bold",12))
+        self.mainFrame_button.grid(row=5,column=0,columnspan=2,ipadx=40)
+        self.appNames.selection_set(0)
+
 
     def variables(self):
-
-
         self.timer = Frame(self.parent)
         self.upgrade = Frame(self.parent)
         self.expCalc = Frame(self.parent)
@@ -190,7 +208,10 @@ class tkinterGui(Frame):
         self.air_main_frame = Frame(self.parent)
         self.air_toolbox = Frame(self.air_main_frame)
         self.air_toolbox.grid(row=0,column=0)
-        self.air_main_frame.grid(row=0,column=0)
+        #self.air_main_frame.grid(row=0,column=0)
+        self.mainFrame = Frame(self.parent)
+        self.table_builder_frame = Frame(self.parent)
+        self.mainFrame.grid(row=0,column=0)
 
 
 
@@ -218,6 +239,15 @@ class tkinterGui(Frame):
         self.islem = [False, False]
         self.var = IntVar()
         self.autoBuff_tick = False
+    def open_app(self):
+        selected_app = self.appNames.get(ACTIVE)
+
+        for appName, appFrame,appGeo in zip(self.appName,self.appFrame,self.appGeometry):
+            if appName == selected_app:
+                self.mainFrame.grid_remove()
+
+                appFrame.grid(row=0,column=0)
+                self.parent.geometry(appGeo)
     def remove_all_frame(self):
         self.timer.grid_remove()
         self.upgrade.grid_remove()
@@ -250,7 +280,6 @@ class tkinterGui(Frame):
             self.autoBuff.grid(row=1,column=0)
         else:
             showinfo("Uyarı", "Şifreyi yanlış girdiniz. !")
-
     def buf_control(self):
         question = messagebox.askquestion('Doğrulayınız', "Relog Süresi 0 ise 6 dk bir buff vermektendir. Relog süresi 0'dan farklı ise buf verip girilen süre kadar sonra relog'a çıkıp tekrar buf vermektedir. \n 0 - Akıllı Sp 1, 2 ve 3. skill barına istediğiniz buf skilini koyabilirsiniz. Bu ayarlamalar 1. skill penceresi için geçerlidir. Gerekli ayarlamalardan emin misiniz ? ",
                                            icon='warning')
@@ -826,8 +855,6 @@ class movemont:
         ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
     def move(X, Y):
         ctypes.windll.user32.SetCursorPos(X, Y)
-
-
 
 if __name__ == "__main__":
     root = Tk()
