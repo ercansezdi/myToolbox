@@ -5,7 +5,6 @@ import keyboard
 from tkinter import *
 from tkinter.messagebox import showinfo
 from PIL import Image, ImageTk
-import datetime
 import os
 import ctypes
 import pymongo
@@ -13,7 +12,6 @@ import tkinter.ttk
 import datetime
 from time import sleep
 import sqlite3
-from functools import partial
 import configparser
 from tkinter import messagebox
 
@@ -21,24 +19,36 @@ class tkinterGui(Frame):
     def __init__(self,parent):
         Frame.__init__(self,parent)
         self.parent = parent
-        self.parent.title("Airrivals ToolBox")
-        self.parent.geometry("600x1")
+        self.parent.title("ToolBox")
+        self.parent.geometry("600x200")
         self.variables()
         self.InitGui()
 
 
     def InitGui(self):
-        # Menu Screen
-        self.menubar = Menu(root)
-        self.menubar.add_command(label="Timer", command=self.run_timer,font = ("Helvatica bold",12))
-        self.menubar.add_command(label="Auto Upgrade", command=self.run_autoUpgrade,font = "Helvatica 12 bold")
-        self.menubar.add_command(label="Calc Exp", command=self.run_calcExp, font="Helvatica 12 bold")
-        self.menubar.add_command(label="item-destroy", command=self.run_destroy, font="Helvatica 12 bold")
-        self.menubar.add_command(label="oto-buf", command=self.run_otoBuf, font="Helvatica 12 bold")
-        self.menubar.add_command(label="kill-mark", command=self.run_kill_mark, font="Helvatica 12 bold")
-        self.menubar.add_command(label="id-passwords", command=self.run_passworDirectory, font="Helvatica 12 bold")
 
-        root.config(menu=self.menubar)
+
+
+
+        # Airrivals Menu Screen
+        self.timer_button = Button(self.air_toolbox, text = "Timer", font = ("Helvatica bold",12), command = self.run_timer)
+        self.timer_button.grid(row=0,column=0)
+        self.timer_button = Button(self.air_toolbox, text="Auto Upgrade", font=("Helvatica bold", 12),
+                                   command=self.run_autoUpgrade)
+        self.timer_button.grid(row=0, column=1)
+        self.timer_button = Button(self.air_toolbox, text="Calc Exp", font=("Helvatica bold", 12),
+                                   command=self.run_calcExp)
+        self.timer_button.grid(row=0, column=2)
+        self.timer_button = Button(self.air_toolbox, text="Item Destroy", font=("Helvatica bold", 12),
+                                   command=self.run_destroy)
+        self.timer_button.grid(row=0, column=3)
+        self.timer_button = Button(self.air_toolbox, text="Auto Buff", font=("Helvatica bold", 12),
+                                   command=self.run_otoBuf)
+        self.timer_button.grid(row=0, column=4)
+        self.timer_button = Button(self.air_toolbox, text="Id Pass", font=("Helvatica bold", 12),
+                                   command=self.run_passworDirectory                                   )
+        self.timer_button.grid(row=0, column=5)
+
         # Password Directory Screen
 
         self.treeBox = FancyListbox(self.idPasswd, font=("Helvatica bold", 12),justify=CENTER)
@@ -167,9 +177,9 @@ class tkinterGui(Frame):
         self.relog_time_entry.insert(0,0)
         self.autobuf_continuous = Button(self.autoBuff,text = "Başlat",command= self.buf_control, font="Helvatica 12 bold")
         self.autobuf_continuous.grid(row=1,column=0,ipadx=100,ipady=5,padx=25,columnspan=2,pady=10)
-
-
     def variables(self):
+
+
         self.timer = Frame(self.parent)
         self.upgrade = Frame(self.parent)
         self.expCalc = Frame(self.parent)
@@ -179,9 +189,17 @@ class tkinterGui(Frame):
         self.killmark = Frame(self.parent)
         self.buff_contunie =Frame(self.parent)
         self.buf_discontunie = Frame(self.parent)
+        self.air_main_frame = Frame(self.parent)
+        self.air_toolbox = Frame(self.air_main_frame)
+        self.air_toolbox.grid(row=0,column=0)
+        self.air_main_frame.grid(row=0,column=0)
+
+
+
         self.click = [False, False]
         self.database = database()
         self.database.create()
+        self.movement = movemont
         self.sayac = 0
         self.calc_exp_string = StringVar()
         self.exp = []
@@ -202,14 +220,7 @@ class tkinterGui(Frame):
         self.islem = [False, False]
         self.var = IntVar()
         self.autoBuff_tick = False
-
-
-
-
-    def run_otoBuf(self):
-        self.parent.title("Auto Buff")
-        showinfo("Uyarı", "Oyuna Etki etmesi için\n Yönetici olarak çalıştırınız. !")
-        self.parent.geometry("300x70")
+    def remove_all_frame(self):
         self.timer.grid_remove()
         self.upgrade.grid_remove()
         self.expCalc.grid_remove()
@@ -218,14 +229,13 @@ class tkinterGui(Frame):
         self.buf_discontunie.grid_remove()
         self.buff_contunie.grid_remove()
         self.killmark.grid_remove()
-        self.autoBuff.grid(row=0,column=0)
-    def run_kill_mark(self):
-        self.killmark.grid_remove()
         self.autoBuff.grid_remove()
-        self.buf_discontunie.grid_remove()
-        self.buff_contunie.grid_remove()
-
-
+    def run_otoBuf(self):
+        self.parent.title("Auto Buff")
+        showinfo("Uyarı", "Oyuna Etki etmesi için\n Yönetici olarak çalıştırınız. !")
+        self.parent.geometry("385x100")
+        self.remove_all_frame()
+        self.autoBuff.grid(row=1,column=0)
     def buf_control(self):
         question = messagebox.askquestion('Doğrulayınız', "Relog Süresi 0 ise 6 dk bir buff vermektendir. Relog süresi 0'dan farklı ise buf verip girilen süre kadar sonra relog'a çıkıp tekrar buf vermektedir. \n 0 - Akıllı Sp 1, 2 ve 3. skill barına istediğiniz buf skilini koyabilirsiniz. Bu ayarlamalar 1. skill penceresi için geçerlidir. Gerekli ayarlamalardan emin misiniz ? ",
                                            icon='warning')
@@ -248,31 +258,28 @@ class tkinterGui(Frame):
             if self.autoBuff_tick:
                 sleep(int(self.relog_time_entry.get()))
                 self.relog()
-
-
     def autobuff_relog_timer(self):
-
         root.after(1000, run.autobuff_loop)
     def open_buf(self):
-        self.move(810, 1050)
-        self.doubleClick()
-        sleep(0.1)
+        self.movement.move(810, 1050)
+        self.movement.doubleClick()
+        sleep(0.3)
         self.move(840, 1050)
-        self.doubleClick()
-        sleep(0.1)
-        self.move(870, 1050)
-        self.doubleClick()
-        sleep(0.1)
-        self.move(900, 1050)
-        self.doubleClick()
+        self.movement.doubleClick()
+        sleep(0.3)
+        self.movement.move(870, 1050)
+        self.movement.doubleClick()
+        sleep(0.3)
+        self.movement.move(900, 1050)
+        self.movement.doubleClick()
     def relog(self):
         keyboard.press("escape")
         keyboard.release("escape")
-        self.move(1000, 760)
-        self.click_button()
-        sleep(17)
-        self.doubleClick()
-        sleep(8)
+        self.movement.move(1000, 760)
+        self.move.click_button()
+        sleep(20)
+        self.movement.doubleClick()
+        sleep(10)
         keyboard.press_and_release('b')
         keyboard.press("enter")
         keyboard.release("enter")
@@ -295,52 +302,44 @@ class tkinterGui(Frame):
     def start_upgrade(self):
         yukseltim = int(self.upgradeOfItems.get()) * int(self.numberOfItems.get())
         for i in range(0, yukseltim):
-            self.move(640, 720)# kart
-            self.doubleClick()
-            sleep(0.05)
-            self.move(670, 720) # item
-            self.doubleClick()
-            sleep(0.05)
-            self.move(1270, 690) # onay
-            self.click_button()
-            self.click_button()
-            sleep(0.05)
-            self.move(540, 550)
-            sleep(0.05)
+            self.movement.move(640, 720)# kart
+            self.movement.doubleClick()
+            sleep(0.1)
+            self.movement.move(670, 720) # item
+            self.movement.doubleClick()
+            sleep(0.1)
+            self.movement.move(1270, 690) # onay
+            self.movement.click_button()
+            self.movement.click_button()
+            sleep(0.1)
+            self.movement.move(540, 550)
+            sleep(0.1)
             if int(self.var.get()) == 0:
-                self.move(1270, 690) # onay
-                self.click_button()
-                self.click_button()
-                sleep(0.05)
+                self.movement.move(1270, 690) # onay
+                self.movement.click_button()
+                self.movement.click_button()
+                sleep(0.1)
 
             else:
-                pass
-                self.move(955, 555)
-                self.click_button()
-                self.click_button()
-                sleep(0.05)
-                self.move(1270, 690)
-                self.click_button()
-                self.click_button()
-                sleep(0.05)
-                self.move(995, 555)
-                sleep(0.05)
-                self.move(1270, 690)
-                self.click_button()
-                self.click_button()
+                self.movement.move(955, 555)
+                self.movement.click_button()
+                self.movement.click_button()
+                sleep(0.1)
+                self.movement.move(1270, 690)
+                self.movement.click_button()
+                self.movement.click_button()
+                sleep(0.1)
+                self.movement.move(995, 555)
+                sleep(0.1)
+                self.movement.move(1270, 690)
+                self.movement.click_button()
+                self.movement.click_button()
     def run_autoUpgrade(self):
         self.parent.title("Auto Upgrade")
         showinfo("Uyarı", "Oyuna Etki etmesi için\n Yönetici olarak çalıştırınız. !")
-        self.parent.geometry("300x70")
-        self.timer.grid_remove()
-        self.buf_discontunie.grid_remove()
-        self.buff_contunie.grid_remove()
-        self.upgrade.grid(row=0, column=0)
-        self.expCalc.grid_remove()
-        self.idPasswd.grid_remove()
-        self.killmark.grid_remove()
-        self.autoBuff.grid_remove()
-        self.iDestroy.grid_remove()
+        self.parent.geometry("385x100")
+        self.remove_all_frame()
+        self.upgrade.grid(row=1, column=0)
     def check_destroy(self):
         if self.numberOfItems_T.get() == "":
             showinfo("HATA !", "Boş Bırakılamaz !!")
@@ -364,46 +363,32 @@ class tkinterGui(Frame):
         yukseltim = int(self.numberOfItems_T.get())
         for i in range(0, yukseltim):
             if int(self.text_sutun1.get()) < 5:
-                self.move(640 + (int(self.text_sutun1.get()) - 1) * 30, 720 + (int(self.text_satir1.get()) - 1) * 30)
+                self.movement.move(640 + (int(self.text_sutun1.get()) - 1) * 30, 720 + (int(self.text_satir1.get()) - 1) * 30)
             else:
-                self.move(480 + (int(self.text_sutun1.get()) - 1) * 30, 570 + (int(self.text_satir1.get()) - 1) * 30)
-            self.doubleClick()
+                self.movement.move(480 + (int(self.text_sutun1.get()) - 1) * 30, 570 + (int(self.text_satir1.get()) - 1) * 30)
+            self.movement.doubleClick()
             sleep(0.05)
-            self.move(1130, 770)  # parçaladı
-            self.click_button()
-            self.click_button()
+            self.movement.move(1130, 770)  # parçaladı
+            self.movement.click_button()
+            self.movement.click_button()
             sleep(1)
-            self.move(1190, 770)  # topla üzerine geldi
+            self.movement.move(1190, 770)  # topla üzerine geldi
             sleep(0.05)
-            self.click_button()
-            self.click_button()
+            self.movement.click_button()
+            self.movement.click_button()
     def run_destroy(self):
         self.parent.title("Item Destroy")
         showinfo("Uyarı", "Oyuna Etki etmesi için\n Yönetici olarak çalıştırınız. !")
-        self.parent.geometry("220x70")
-        self.iDestroy.grid(row=0, column=0)
-        self.timer.grid_remove()
-        self.buf_discontunie.grid_remove()
-        self.buff_contunie.grid_remove()
-        self.upgrade.grid_remove()
-        self.expCalc.grid_remove()
-        self.killmark.grid_remove()
-        self.autoBuff.grid_remove()
-        self.idPasswd.grid_remove()
+        self.parent.geometry("385x100")
+        self.remove_all_frame()
+        self.iDestroy.grid(row=1, column=0)
     def fark_ayarla(self):
         self.database.update_config(self.entry_3.get())
     def run_timer(self):
         self.parent.title("Boss Timer")
         self.parent.geometry("450x320")
-        self.timer.grid(row=0,column=0)
-        self.upgrade.grid_remove()
-        self.buf_discontunie.grid_remove()
-        self.buff_contunie.grid_remove()
-        self.killmark.grid_remove()
-        self.autoBuff.grid_remove()
-        self.idPasswd.grid_remove()
-        self.iDestroy.grid_remove()
-        self.expCalc.grid_remove()
+        self.remove_all_frame()
+        self.timer.grid(row=1,column=0)
         self.entry_3.delete(0,"end")
         self.entry_3.insert(0,self.database.return_config_time())
 
@@ -510,16 +495,9 @@ class tkinterGui(Frame):
         root.after(1000, run.loop)
     def run_calcExp(self):
         self.parent.title("Experiment Calculator")
-        self.parent.geometry("300x70")
-        self.iDestroy.grid_remove()
-        self.timer.grid_remove()
-        self.upgrade.grid_remove()
-        self.killmark.grid_remove()
-        self.autoBuff.grid_remove()
-        self.idPasswd.grid_remove()
-        self.buf_discontunie.grid_remove()
-        self.buff_contunie.grid_remove()
-        self.expCalc.grid(row=0, column=0)
+        self.parent.geometry("385x80")
+        self.remove_all_frame()
+        self.expCalc.grid(row=1, column=0)
         self.exp = []
         self.experiment()
     def experiment(self):
@@ -664,16 +642,9 @@ class tkinterGui(Frame):
             pass
     def run_passworDirectory(self):
         self.parent.title("Password Directory")
-        self.parent.geometry("645x270")
-        self.timer.grid_remove()
-        self.upgrade.grid_remove()
-        self.buf_discontunie.grid_remove()
-        self.buff_contunie.grid_remove()
-        self.iDestroy.grid_remove()
-        self.killmark.grid_remove()
-        self.autoBuff.grid_remove()
-        self.idPasswd.grid(row=0, column=0)
-        self.expCalc.grid_remove()
+        self.parent.geometry("645x300")
+        self.remove_all_frame()
+        self.idPasswd.grid(row=1, column=0)
         self.click = [False, False]
         self.database.create()
 
@@ -719,14 +690,7 @@ class tkinterGui(Frame):
             self.id.insert(0, "Kullanıcı Adı")
         if str(self.passwd.get()) == "Şifre":
             self.passwd.delete(0, END)
-    def click_button(self):
-        ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
-        ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
-    def doubleClick(self):
-        ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
-        ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
-    def move(self,X, Y):
-        ctypes.windll.user32.SetCursorPos(X, Y)
+
 class database:
     def __init__(self):
         self.path = "file\\"
@@ -829,6 +793,16 @@ class FancyListbox(tkinter.Listbox):
                 self.delete(i)
         else:
             messagebox.showinfo('İptal ', 'Az daha siliyordum :)')
+class movemont:
+    def click_button():
+        ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
+        ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
+    def doubleClick():
+        ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
+        ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
+    def move(X, Y):
+        ctypes.windll.user32.SetCursorPos(X, Y)
+
 
 
 if __name__ == "__main__":
