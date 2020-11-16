@@ -20,15 +20,12 @@ class tkinterGui(Frame):
         Frame.__init__(self,parent)
         self.parent = parent
         self.parent.title("ToolBox")
-        self.parent.geometry("600x200")
+        self.parent.geometry("385x27")
         self.variables()
         self.InitGui()
 
 
     def InitGui(self):
-
-
-
 
         # Airrivals Menu Screen
         self.timer_button = Button(self.air_toolbox, text = "Timer", font = ("Helvatica bold",12), command = self.run_timer)
@@ -177,6 +174,7 @@ class tkinterGui(Frame):
         self.relog_time_entry.insert(0,0)
         self.autobuf_continuous = Button(self.autoBuff,text = "Başlat",command= self.buf_control, font="Helvatica 12 bold")
         self.autobuf_continuous.grid(row=1,column=0,ipadx=100,ipady=5,padx=25,columnspan=2,pady=10)
+
     def variables(self):
 
 
@@ -231,11 +229,28 @@ class tkinterGui(Frame):
         self.killmark.grid_remove()
         self.autoBuff.grid_remove()
     def run_otoBuf(self):
-        self.parent.title("Auto Buff")
-        showinfo("Uyarı", "Oyuna Etki etmesi için\n Yönetici olarak çalıştırınız. !")
-        self.parent.geometry("385x100")
-        self.remove_all_frame()
-        self.autoBuff.grid(row=1,column=0)
+        self.popup = Toplevel()
+        self.verification_label_1 = Label(self.popup,
+                                          text="Bu uygulamayı yönetici tarafından şifrelenmiştir. \nUygulamayı kullanmak için şifre girmeniz gerekmektedir.",font="Helvatica 12 bold")
+        self.verification_label_1.grid(row=0, column=0,columnspan=3)
+        self.verification_label_2 = Label(self.popup, text="Şifre :",font="Helvatica 12 bold")
+        self.verification_label_2.grid(row=1, column=0)
+        self.verification_entry = Entry(self.popup,font="Helvatica 12 bold")
+        self.verification_entry.grid(row=1, column=1)
+        self.verification_button = Button(self.popup, text="Onayla", command=self.run_otoBuf_start,font="Helvatica 12 bold")
+        self.verification_button.grid(row=2, column=0,columnspan=3)
+    def run_otoBuf_start(self):
+        passwd = self.verification_entry.get()
+        self.popup.destroy()
+        if passwd == "147896325":
+            self.parent.title("Auto Buff")
+            showinfo("Uyarı", "Oyuna Etki etmesi için\n Yönetici olarak çalıştırınız. !")
+            self.parent.geometry("385x100")
+            self.remove_all_frame()
+            self.autoBuff.grid(row=1,column=0)
+        else:
+            showinfo("Uyarı", "Şifreyi yanlış girdiniz. !")
+
     def buf_control(self):
         question = messagebox.askquestion('Doğrulayınız', "Relog Süresi 0 ise 6 dk bir buff vermektendir. Relog süresi 0'dan farklı ise buf verip girilen süre kadar sonra relog'a çıkıp tekrar buf vermektedir. \n 0 - Akıllı Sp 1, 2 ve 3. skill barına istediğiniz buf skilini koyabilirsiniz. Bu ayarlamalar 1. skill penceresi için geçerlidir. Gerekli ayarlamalardan emin misiniz ? ",
                                            icon='warning')
@@ -737,7 +752,7 @@ class database:
             showinfo("Hata Mesajı", "Kullanıcı Adı veya Şifre Boş bırakılamaz.")
         else:
             try:
-                baglan = sqlite3.connect(self.path + self.info["info"]["databaseName"])
+                baglan = sqlite3.connect(self.path + self.info["info"]["databaseName_passwd"])
                 veri = baglan.cursor()
                 veri.execute("INSERT INTO password (id, sifre) VALUES (?,?)", (variable[0], variable[1]))
                 baglan.commit()
@@ -745,8 +760,16 @@ class database:
             except sqlite3.IntegrityError:
                 showinfo("HATA ! ", "Kullanıcı Adı Zaten Eklenmiş.")
     def delete(self,id):
-        baglan = sqlite3.connect(self.path + self.info["info"]["databaseName"])
+
+        baglan = sqlite3.connect(self.path + self.info["info"]["databaseName_passwd"])
         veri = baglan.cursor()
+        read = veri.execute("select * from password").fetchall()
+        syc = 1
+        for i in read:
+            if syc == id+1:
+                id = i[0]
+            syc += 1
+        print(id)
         veri.execute("DELETE from password where id = '" + id + "'")
         baglan.commit()
         baglan.close()
@@ -770,6 +793,7 @@ class FancyListbox(tkinter.Listbox):
         self.bind("<Button-3>", self.popup)
         self.popup_menu.add_command(label="Delete",
                                     command=self.delete_selected)
+        self.database = database()
     def popup(self, event):
         try:
             self.popup_menu.tk_popup(event.x_root, event.y_root, 0)
@@ -785,12 +809,12 @@ class FancyListbox(tkinter.Listbox):
             self.delete(i)
 
     def delete_selected(self):
-
         MsgBox = messagebox.askquestion('Onaylayınız', 'Bak silcem emin misin ?',
                                            icon='warning')
         if MsgBox == 'yes':
             for i in self.curselection()[::-1]:
-                self.delete(i)
+                self.database.delete(i)
+
         else:
             messagebox.showinfo('İptal ', 'Az daha siliyordum :)')
 class movemont:
