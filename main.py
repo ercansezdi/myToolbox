@@ -179,9 +179,9 @@ class tkinterGui(Frame):
         self.autobuf_continuous.grid(row=1,column=0,ipadx=100,ipady=5,padx=25,columnspan=2,pady=10)
         # Main Screen
 
-        self.appName = ["Library Downloader","Airrivals","Table Builder","Computer Details"]
-        self.appFrame = [ self.downloadLib,self.air_main_frame, self.table_builder_frame,self.systemDetails]
-        self.appGeometry = ["200x500","385x30", "230x180","450x100"]
+        self.appName = ["Library Downloader","Airrivals","Table Builder","Computer Details","Wifi Password"]
+        self.appFrame = [ self.downloadLib,self.air_main_frame, self.table_builder_frame,self.systemDetails, self.wifiPassword]
+        self.appGeometry = ["200x500","385x30", "230x180","450x100", "250x250"]
         self.appNames = Listbox(self.mainFrame, font=("Helvatica bold", 12), justify=CENTER)
         self.appNames.grid(row=0, column=0, rowspan=4, columnspan=1, ipady=40)
         scrollbar = Scrollbar(self.mainFrame)
@@ -203,6 +203,14 @@ class tkinterGui(Frame):
         self.platform_ = Label(self.systemDetails, text=data, font=("Helvatica bold", 12))
         self.platform_.grid(row=0, column=0)
 
+        #Wifi passwords
+        data = self.subprocess_Lib()
+        self.subprocess_ = Label(self.wifiPassword, text=data, font=("Helvatica bold", 12))
+        self.subprocess_.grid(row=0, column=0)
+
+
+
+
     def variables(self):
         self.timer = Frame(self.parent)
         self.upgrade = Frame(self.parent)
@@ -222,6 +230,7 @@ class tkinterGui(Frame):
         self.mainFrame.grid(row=0,column=0)
         self.downloadLib = Frame(self.parent)
         self.systemDetails = Frame(self.parent)
+        self.wifiPassword = Frame(self.parent)
 
 
 
@@ -250,7 +259,7 @@ class tkinterGui(Frame):
         self.var = IntVar()
         self.autoBuff_tick = False
     def download_function(self):
-        libs = ["keyboard", "pillow", "pymongo", "pymongo[srv]"]
+        libs = ["keyboard", "pillow", "pymongo", "pymongo[srv]", "platform", "prettytable"]
     def open_app(self):
         selected_app = self.appNames.get(ACTIVE)
 
@@ -259,7 +268,7 @@ class tkinterGui(Frame):
                 self.mainFrame.grid_remove()
                 self.parent.title(appName)
                 appFrame.grid(row=0,column=0)
-                self.parent.geometry(appGeo)
+                self.parent.geometry(appGeo),
     def PrettyTable_lib(self):
         from prettytable import PrettyTable
 
@@ -285,8 +294,27 @@ class tkinterGui(Frame):
 
 
         return string
-
-
+    def subprocess_Lib(self):
+        import subprocess
+        text = ""
+        data = subprocess.check_output(['netsh', 'wlan', 'show', 'profiles']).decode('utf-8').split('\n')
+        profiles = [i.split(":")[1][1:-1] for i in data if "All User Profile" in i]
+        for i in profiles:
+            results = subprocess.check_output(['netsh', 'wlan', 'show', 'profile', i, 'key=clear']).decode(
+                'utf-8').split(
+                '\n')
+            results = [b.split(":")[1][1:-1] for b in results if "Key Content" in b]
+            try:
+                text += i
+                text += " ->  "
+                text += results[0]
+                text += "\n"
+            except IndexError:
+                text += i
+                text += " ->  "
+                text += "Empty"
+                text += "\n"
+        return text
     def remove_all_frame(self):
         self.timer.grid_remove()
         self.upgrade.grid_remove()
