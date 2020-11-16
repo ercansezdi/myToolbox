@@ -179,9 +179,9 @@ class tkinterGui(Frame):
         self.autobuf_continuous.grid(row=1,column=0,ipadx=100,ipady=5,padx=25,columnspan=2,pady=10)
         # Main Screen
 
-        self.appName = ["Airrivals","Table Builder"]
-        self.appFrame = [self.air_main_frame, self.table_builder_frame]
-        self.appGeometry = ["385x30", "50x50"]
+        self.appName = ["Library Downloader","Airrivals","Table Builder","Computer Details"]
+        self.appFrame = [ self.downloadLib,self.air_main_frame, self.table_builder_frame,self.systemDetails]
+        self.appGeometry = ["200x500","385x30", "230x180","450x100"]
         self.appNames = Listbox(self.mainFrame, font=("Helvatica bold", 12), justify=CENTER)
         self.appNames.grid(row=0, column=0, rowspan=4, columnspan=1, ipady=40)
         scrollbar = Scrollbar(self.mainFrame)
@@ -190,10 +190,18 @@ class tkinterGui(Frame):
         scrollbar.config(command=self.appNames.yview)
         for values in self.appName:
             self.appNames.insert(END, values)
-        self.mainFrame_button = Button(self.mainFrame, text = "Open App",command = self.open_app, font = ("Helvatica bold",12))
+        self.mainFrame_button = Button(self.mainFrame, text = "Open App",command = self.open_app, font = ("Helvatica bold",15))
         self.mainFrame_button.grid(row=5,column=0,columnspan=2,ipadx=40)
         self.appNames.selection_set(0)
+        # PrettyTable
+        data = str(self.PrettyTable_lib())
+        self.prettytable_ = Label(self.table_builder_frame,text =data, font = ("Helvatica bold",12))
+        self.prettytable_.grid(row=0,column=0)
 
+        #Platform
+        data = self.platform_Lib()
+        self.platform_ = Label(self.systemDetails, text=data, font=("Helvatica bold", 12))
+        self.platform_.grid(row=0, column=0)
 
     def variables(self):
         self.timer = Frame(self.parent)
@@ -212,6 +220,8 @@ class tkinterGui(Frame):
         self.mainFrame = Frame(self.parent)
         self.table_builder_frame = Frame(self.parent)
         self.mainFrame.grid(row=0,column=0)
+        self.downloadLib = Frame(self.parent)
+        self.systemDetails = Frame(self.parent)
 
 
 
@@ -239,15 +249,44 @@ class tkinterGui(Frame):
         self.islem = [False, False]
         self.var = IntVar()
         self.autoBuff_tick = False
+    def download_function(self):
+        libs = ["keyboard", "pillow", "pymongo", "pymongo[srv]"]
     def open_app(self):
         selected_app = self.appNames.get(ACTIVE)
 
         for appName, appFrame,appGeo in zip(self.appName,self.appFrame,self.appGeometry):
             if appName == selected_app:
                 self.mainFrame.grid_remove()
-
+                self.parent.title(appName)
                 appFrame.grid(row=0,column=0)
                 self.parent.geometry(appGeo)
+    def PrettyTable_lib(self):
+        from prettytable import PrettyTable
+
+        x = PrettyTable()
+
+        x.field_names = ["Şehir Adı", "Alan", "Nufus", "Yıllık Yağış"]
+
+        x.add_row(["Adelaide", 1295, 1158259, 600.5])
+        x.add_row(["Brisbane", 5905, 1857594, 1146.4])
+        x.add_row(["Darwin", 112, 120900, 1714.7])
+        x.add_row(["Hobart", 1357, 205556, 619.5])
+        x.add_row(["Sydney", 2058, 4336374, 1214.8])
+        x.add_row(["Melbourne", 1566, 3806092, 646.9])
+        x.add_row(["Perth", 5386, 1554769, 869.4])
+        return x
+    def platform_Lib(self):
+        import platform
+        string = ""
+        string += "platform.platform() = " + platform.platform() + "\n"
+        string += "platform.system() = " + platform.system() + "\n"
+        string += "platform.processor() = " + platform.processor() + "\n"
+        string +=  "platform.architecture() = " + str(platform.architecture()) + "\n"
+
+
+        return string
+
+
     def remove_all_frame(self):
         self.timer.grid_remove()
         self.upgrade.grid_remove()

@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     x = PrettyTable()
 
-    x.field_names = ["City name", "Area", "Population", "Annual Rainfall"]
+    x.field_names = ["Şehir Adı", "Alan", "Nufus", "Yıllık Yağış"]
 
     x.add_row(["Adelaide", 1295, 1158259, 600.5])
     x.add_row(["Brisbane", 5905, 1857594, 1146.4])
