@@ -179,9 +179,9 @@ class tkinterGui(Frame):
         self.autobuf_continuous.grid(row=1,column=0,ipadx=100,ipady=5,padx=25,columnspan=2,pady=10)
         # Main Screen
 
-        self.appName = ["Library Downloader","Airrivals","Table Builder","Computer Details","Wifi Password"]
-        self.appFrame = [ self.downloadLib,self.air_main_frame, self.table_builder_frame,self.systemDetails, self.wifiPassword]
-        self.appGeometry = ["200x500","385x30", "230x180","450x100", "250x250"]
+        self.appName = ["Library Downloader","Airrivals","Table Builder","Computer Details","Wifi Password","Notifier Generator"]
+        self.appFrame = [ self.downloadLib,self.air_main_frame, self.table_builder_frame,self.systemDetails, self.wifiPassword,self.notifier]
+        self.appGeometry = ["200x500","385x30", "230x180","450x100", "250x250","30x20"]
         self.appNames = Listbox(self.mainFrame, font=("Helvatica bold", 12), justify=CENTER)
         self.appNames.grid(row=0, column=0, rowspan=4, columnspan=1, ipady=40)
         scrollbar = Scrollbar(self.mainFrame)
@@ -208,6 +208,11 @@ class tkinterGui(Frame):
         self.subprocess_ = Label(self.wifiPassword, text=data, font=("Helvatica bold", 12))
         self.subprocess_.grid(row=0, column=0)
 
+        # Notifier
+
+        self.notifier_button = Button(self.notifier, text="Bildirim Gönder", font=("Helvatica bold", 12),command = self.notifier_Lib)
+        self.notifier_button.grid(row=0, column=0)
+
 
 
 
@@ -231,6 +236,7 @@ class tkinterGui(Frame):
         self.downloadLib = Frame(self.parent)
         self.systemDetails = Frame(self.parent)
         self.wifiPassword = Frame(self.parent)
+        self.notifier = Frame(self.parent)
 
 
 
@@ -259,7 +265,7 @@ class tkinterGui(Frame):
         self.var = IntVar()
         self.autoBuff_tick = False
     def download_function(self):
-        libs = ["keyboard", "pillow", "pymongo", "pymongo[srv]", "platform", "prettytable"]
+        libs = ["keyboard", "pillow", "pymongo", "pymongo[srv]", "platform", "prettytable","win10toast"]
     def open_app(self):
         selected_app = self.appNames.get(ACTIVE)
 
@@ -315,6 +321,11 @@ class tkinterGui(Frame):
                 text += "Empty"
                 text += "\n"
         return text
+    def notifier_Lib(self):
+        from win10toast import ToastNotifier
+        toaster = ToastNotifier()
+        toaster.show_toast("Bildirim !", "Bildirim Geldi Loo", threaded=True, icon_path=None, duration=3)
+        toaster.notification_active()
     def remove_all_frame(self):
         self.timer.grid_remove()
         self.upgrade.grid_remove()
